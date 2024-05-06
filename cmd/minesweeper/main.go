@@ -2,21 +2,28 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/ottovw/minesweeper/pkg/minesweeper"
-	"github.com/ottovw/minesweeper/pkg/renderer"
+	"github.com/ottovw/minesweeper/pkg/terminal"
 )
 
 func main() {
 	fmt.Println("Welcome to Minesweeper! \n---")
 	board := minesweeper.NewBoard(5, 10, 10)
-	renderer.PrintBoard(board)
-	for i := 0; i < 5; i++ {
-		ok := board.RevealRandomCell()
-		if !ok {
-			fmt.Println("Game over!")
-			break
+	terminal.PrintBoard(board)
+	for {
+		x, y, err := terminal.ReadCoordinates(board.Height, board.Width)
+		if err != nil {
+			fmt.Println(err)
+			continue
 		}
-		renderer.PrintBoard(board)
+		ok := board.RevealCell(x,y)
+		if !ok {
+			terminal.PrintBoard(board)
+			fmt.Println("Game over!")
+			os.Exit(1)
+		}
+		terminal.PrintBoard(board)
 	}
 }

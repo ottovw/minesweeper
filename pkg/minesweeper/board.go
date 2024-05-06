@@ -68,7 +68,9 @@ func (b *Board) revealNeighbors(x, y int) {
 			cell := b.GetCell(dx, dy)
 			if !cell.Mine && !cell.Revealed {
 				cell.Revealed = true
-				b.revealNeighbors(dx, dy)
+				if cell.Neighbors == 0 {
+					b.revealNeighbors(dx, dy)
+				}
 			}
 		}
 	}
